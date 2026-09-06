@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-01-01T00:00:00Z",
+  "hub": {"ok": true, "error": ""},
+  "nodes": [{"machine_id":"machine-a","state":"connected","accepting":true,"accepting_effective":true,"accepting_override":"","alert_class":"",
+             "connected_since":"2026-01-01T00:00:00Z","last_ping_ms":12,
+             "load":{"load1":0.4,"load5":0.4,"load15":0.4,"ncpu":4},
+             "memory":{"free_pct":91.8,"compressed_mb":null,"swap_used_mb":0,"source":"proc_meminfo"},
+             "active_jobs":2}],
+  "lanes": [{"lane":"lane-a","machine":"machine-a","pane":"w1:p1","parent":"","sink":false}],
+  "jobs":  [{"job_id":"job-a","machine":"machine-a","owner_lane":"lane-a","role":"worker","tier":"T1",
+             "started_at":"2026-01-01T00:00:00Z","last_event_kind":"job.claimed","last_event_at":"2026-01-01T00:00:00Z"}],
+  "tasks": {"by_state":{"backlog":0,"claimed":0,"in_progress":0,"verifying":0,"join":0,"needs_decision":0,"hold":0},
+            "decisions_pending": 0,
+            "active": [{"id":1,"lane":"lane-a","title":"…","kind":"implement","state":"in_progress","claimed_by":"lane-b","updated_at":"…"}]},
+  "console_paths": {"decisions":"/ui/decisions","queue":"/ui/queue","fleet":"/ui/fleet"}
+}

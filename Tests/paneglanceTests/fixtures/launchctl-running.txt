@@ -1,0 +1,10 @@
+gui/501/dev.example.demo = {
+	active count = 11
+	path = /Users/example/Library/LaunchAgents/dev.example.demo.plist
+	type = LaunchAgent
+	state = running
+
+	program = /usr/local/bin/demo
+	...
+	domain = gui/501 [100003]
+}

@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-01-01T00:00:00Z",
+  "hub": {"ok": true, "error": ""},
+  "nodes": [
+    {"machine_id":"machine-a","state":"connected","accepting":true,"accepting_effective":true,"accepting_override":"","alert_class":"",
+     "connected_since":"2026-01-01T00:00:00Z","last_ping_ms":12,"load":null,"memory":null,"active_jobs":2},
+    {"machine_id":"machine-a","state":"connected","accepting":false,"accepting_effective":false,"accepting_override":"","alert_class":"yellow",
+     "connected_since":"2026-01-01T00:00:00Z","last_ping_ms":12,
+     "load":{"load1":1.25,"load5":1.0,"load15":0.75,"ncpu":8},
+     "memory":{"free_pct":49.5,"compressed_mb":null,"swap_used_mb":7,"source":"proc_meminfo"},"active_jobs":0}
+  ],
+  "lanes": [
+    {"lane":"lane-a","machine":"machine-a","pane":"w1:p1","parent":"","sink":false},
+    {"lane":"lane-a","machine":"machine-a","pane":"w1:p1","parent":"lane-a","sink":true}
+  ],
+  "jobs": [],
+  "tasks": {"by_state":{"backlog":0,"claimed":0,"in_progress":3,"verifying":1,"join":0,"needs_decision":2,"hold":0},
+            "decisions_pending": 2,
+            "active": [
+              {"id":1,"lane":"lane-a","title":"12345678901234567890123456789012345678901","kind":"implement","state":"in_progress","claimed_by":"lane-a","updated_at":"…"}
+            ]},
+  "console_paths": {"decisions":"/ui/decisions","queue":"/ui/queue","fleet":"/ui/fleet"}
+}
