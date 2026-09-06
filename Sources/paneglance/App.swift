@@ -22,6 +22,7 @@ final class AppStore: ObservableObject {
     private var pollState = FleetPollState()
     private var nodeState: NodeRunState = .stopped
     private var launchdFailure: String?
+    private var acceptingFailure: String?
     private var pollingTask: Task<Void, Never>?
 
     @Published private(set) var snapshot: MenuSnapshot
@@ -65,7 +66,7 @@ final class AppStore: ObservableObject {
         if let launchd {
             let inspection = launchd.inspect()
             nodeState = inspection.state
-            launchdFailure = inspection.reason.map { "Node status: \($0)" }
+            recordLaunchdFailure(inspection.reason.map { "Node status: \($0)" })
         }
         Task { [weak self] in
             guard let self else { return }
@@ -85,7 +86,7 @@ final class AppStore: ObservableObject {
             guard let self else { return }
             await self.acceptingState.toggle(using: client, machineID: machineID)
             self.accepting = self.acceptingState.accepting ?? false
-            self.launchdFailure = self.acceptingState.failureReason
+            self.recordAcceptingFailure(self.acceptingState.failureReason)
             self.render()
         }
         accepting.toggle()
@@ -94,10 +95,10 @@ final class AppStore: ObservableObject {
     func toggleNode() {
         guard let launchd else { return }
         let operation: NodeOperation = nodeState == .running ? .off : .on
-        launchdFailure = launchd.perform(operation)
+        recordLaunchdFailure(launchd.perform(operation))
         let inspection = launchd.inspect()
         nodeState = inspection.state
-        if launchdFailure == nil { launchdFailure = inspection.reason.map { "Node status: \($0)" } }
+        if launchdFailure == nil { recordLaunchdFailure(inspection.reason.map { "Node status: \($0)" }) }
         render()
     }
 
@@ -111,11 +112,22 @@ final class AppStore: ObservableObject {
         NSWorkspace.shared.open(configuration.consoleURL.appending(path: paths.decisions))
     }
 
+    func recordLaunchdFailure(_ failure: String?) {
+        launchdFailure = failure
+        render()
+    }
+
+    func recordAcceptingFailure(_ failure: String?) {
+        acceptingFailure = failure
+        render()
+    }
+
     private func render() {
         snapshot = MenuRenderer.snapshot(
             pollState: pollState,
             nodeState: nodeState,
-            launchdFailure: launchdFailure
+            launchdFailure: launchdFailure,
+            acceptingFailure: acceptingFailure
         )
     }
 }
@@ -133,7 +145,10 @@ struct AppConfiguration: Sendable {
         homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser
     ) -> AppConfiguration? {
         let configURL = homeDirectory.appending(path: ".config/paneglance/config.toml")
-        guard let contents = try? String(contentsOf: configURL, encoding: .utf8) else { return nil }
+        guard let contents = try? String(contentsOf: configURL, encoding: .utf8) else {
+            FileHandle.standardError.write(Data("paneglance: config not found; showing Not configured\n".utf8))
+            return nil
+        }
         let values = TOML.parse(contents)
         guard
             let urlText = values["console_url"], let consoleURL = URL(string: urlText),

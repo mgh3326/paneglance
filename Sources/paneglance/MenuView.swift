@@ -6,6 +6,7 @@ struct MenuSnapshot: Sendable {
     let nodeStatus: String
     let nodeAction: String
     let launchdFailure: String?
+    let acceptingFailure: String?
     let machines: [MachineMenuLine]
     let lanes: [String]
     let queueSummary: String
@@ -23,6 +24,7 @@ enum MenuRenderer {
         pollState: FleetPollState,
         nodeState: NodeRunState,
         launchdFailure: String?,
+        acceptingFailure: String? = nil,
         timeZone: TimeZone = .current
     ) -> MenuSnapshot {
         let glance = pollState.glance
@@ -31,12 +33,17 @@ enum MenuRenderer {
             nodeStatus: "Node: \(nodeState.rawValue)",
             nodeAction: nodeState == .running ? "Node Off" : "Node On",
             launchdFailure: launchdFailure,
+            acceptingFailure: acceptingFailure,
             machines: glance?.nodes.map(machineLine) ?? [],
             lanes: glance?.lanes.map(laneLine) ?? [],
             queueSummary: queueLine(glance?.tasks.byState),
             activeTasks: glance?.tasks.active.prefix(5).map(activeTaskLine) ?? [],
             decisions: "Decisions pending: \(glance?.tasks.decisionsPending ?? 0)"
         )
+    }
+
+    static func menuItems(configured: Bool) -> [String] {
+        configured ? [] : ["Not configured"]
     }
 
     static func header(status: FleetStatus, lastSuccess: Date?, timeZone: TimeZone = .current) -> String {
@@ -103,8 +110,10 @@ struct MenuView: View {
 
     var body: some View {
         if !store.configured {
-            Button("Not configured") {}
-                .disabled(true)
+            ForEach(MenuRenderer.menuItems(configured: store.configured), id: \.self) { item in
+                Button(item) {}
+                    .disabled(true)
+            }
         } else {
             let snapshot = store.snapshot
             Text(snapshot.header)
@@ -118,6 +127,9 @@ struct MenuView: View {
             ))
             .disabled(!store.acceptingAvailable)
             if let failure = snapshot.launchdFailure {
+                Text(failure)
+            }
+            if let failure = snapshot.acceptingFailure {
                 Text(failure)
             }
             Divider()

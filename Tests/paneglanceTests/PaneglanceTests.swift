@@ -103,6 +103,7 @@ func menuRendering() throws {
     #expect(snapshot.nodeStatus == "Node: running")
     #expect(snapshot.nodeAction == "Node Off")
     #expect(snapshot.launchdFailure == "Node Off failed: exit 113")
+    #expect(snapshot.acceptingFailure == nil)
     #expect(snapshot.machines[0].text == "machine-a  ●  load –  free –  swap –  [accepting]")
     #expect(snapshot.machines[0].dotColor == .normal)
     #expect(snapshot.machines[1].text == "machine-a  ●  load 1.2/8  free 50%  swap 7")
@@ -111,6 +112,29 @@ func menuRendering() throws {
     #expect(snapshot.queueSummary == "in_progress 3 · verifying 1 · needs_decision 2")
     #expect(snapshot.activeTasks == ["#1 lane-a · 123456789012345678901234567890123456789…"])
     #expect(snapshot.decisions == "Decisions pending: 2")
+}
+
+@Test("an absent configuration renders only the literal Not configured menu item")
+@MainActor
+func notConfiguredMenuRendering() {
+    let store = AppStore(configuration: nil)
+    #expect(store.configured == false)
+    #expect(MenuRenderer.menuItems(configured: store.configured) == ["Not configured"])
+}
+
+@Test("AppStore keeps launchd and accepting failure reasons independent")
+@MainActor
+func appStoreFailureReasonsRemainIndependent() {
+    let store = AppStore(configuration: nil)
+    store.recordLaunchdFailure("Node Off failed: exit 113")
+    store.recordAcceptingFailure(nil)
+    #expect(store.snapshot.launchdFailure == "Node Off failed: exit 113")
+    #expect(store.snapshot.acceptingFailure == nil)
+
+    store.recordAcceptingFailure("Accepting failed: HTTP 503")
+    store.recordLaunchdFailure(nil)
+    #expect(store.snapshot.launchdFailure == nil)
+    #expect(store.snapshot.acceptingFailure == "Accepting failed: HTTP 503")
 }
 
 @Test("non-ok headers use since time and an absent timestamp")
