@@ -1,4 +1,5 @@
 import AppKit
+import Foundation
 import SwiftUI
 
 @main
@@ -31,12 +32,13 @@ final class AppStore: ObservableObject {
 
     var configured: Bool { configuration != nil }
 
-    init(configuration: AppConfiguration? = AppConfiguration.load()) {
+    init(configuration: AppConfiguration? = AppConfiguration.load(), session: URLSession = .shared) {
         self.configuration = configuration
         if let configuration {
             client = GlanceClient(
                 consoleURL: configuration.consoleURL,
-                credentials: configuration.credentials
+                credentials: configuration.credentials,
+                session: session
             )
             launchd = LaunchdController(label: configuration.launchdLabel, plistPath: configuration.launchdPlist)
         } else {
@@ -44,19 +46,34 @@ final class AppStore: ObservableObject {
             launchd = nil
         }
         snapshot = MenuRenderer.snapshot(pollState: pollState, nodeState: nodeState, launchdFailure: launchdFailure)
+        // Polling used to begin at the first menuDidOpen(), so the menu's first
+        // paint was always "offline since --:--" while that fetch was in flight.
+        // Starting with the app means the first open shows fleet state already.
+        startPolling()
     }
 
     func menuDidOpen() {
         guard configured else { return }
         refresh()
-        if pollingTask == nil {
-            pollingTask = Task { [weak self] in
-                guard let self, let interval = self.configuration?.pollSeconds else { return }
-                while !Task.isCancelled {
-                    try? await Task.sleep(for: .seconds(interval))
-                    guard !Task.isCancelled else { break }
-                    self.refresh()
-                }
+        startPolling()
+    }
+
+    func stopPolling() {
+        pollingTask?.cancel()
+        pollingTask = nil
+    }
+
+    /// Kicks off the first fetch and the repeat timer. Idempotent: a menu opened
+    /// after startup only adds its own immediate refresh.
+    private func startPolling() {
+        guard configured, pollingTask == nil else { return }
+        refresh()
+        pollingTask = Task { [weak self] in
+            guard let self, let interval = self.configuration?.pollSeconds else { return }
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(interval))
+                guard !Task.isCancelled else { break }
+                self.refresh()
             }
         }
     }

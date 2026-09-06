@@ -1,5 +1,34 @@
 import Foundation
 
+// The hub derives its numbers from OS counters in floating point, so a field that
+// looks integral in the contract example ("swap_used_mb": 0) reaches us as
+// 14446.44 from a real node. JSONDecoder rejects that outright for an `Int`
+// property ("Number 14446.44 is not representable in Swift") and fails the *whole*
+// payload, so one decimal parked the menu on `offline` forever. Every measured
+// quantity below is therefore `Double`; the fields that count things stay `Int`
+// and decode through `decodeLenientIntIfPresent`.
+extension KeyedDecodingContainer {
+    /// Decodes a count as `Int` while tolerating a JSON number that carries a
+    /// fractional part.
+    ///
+    /// `ncpu`, `active_jobs`, the task tallies, `decisions_pending` and
+    /// `active[].id` count whole things, so they stay `Int` here rather than
+    /// leaking a `Double` into arithmetic and rendering. But the hub is free to
+    /// compute them in floating point, and an `Int` property that meets `5.5`
+    /// fails the entire response — the same failure mode `swap_used_mb` caused.
+    /// Reading through `Double` and flooring degrades one odd value instead of
+    /// losing every node, lane and job alongside it. A value too large for `Int`
+    /// (or non-finite) would trap on conversion, so it decodes as a missing count.
+    func decodeLenientIntIfPresent(forKey key: Key) throws -> Int? {
+        if let value = try? decode(Int.self, forKey: key) { return value }
+        guard
+            let value = try decodeIfPresent(Double.self, forKey: key),
+            value.isFinite, value >= Double(Int.min), value < Double(Int.max)
+        else { return nil }
+        return Int(value.rounded(.down))
+    }
+}
+
 enum FleetStatus: String, Codable, CaseIterable, Sendable {
     case ok
     case offline
@@ -67,7 +96,7 @@ struct Node: Decodable, Sendable {
     let acceptingOverride: String
     let alertClass: String
     let connectedSince: String
-    let lastPingMS: Int?
+    let lastPingMS: Double?
     let load: Load?
     let memory: Memory?
     let activeJobs: Int
@@ -93,10 +122,10 @@ struct Node: Decodable, Sendable {
         acceptingOverride = try container.decodeIfPresent(String.self, forKey: .acceptingOverride) ?? ""
         alertClass = try container.decodeIfPresent(String.self, forKey: .alertClass) ?? ""
         connectedSince = try container.decodeIfPresent(String.self, forKey: .connectedSince) ?? ""
-        lastPingMS = try container.decodeIfPresent(Int.self, forKey: .lastPingMS)
+        lastPingMS = try container.decodeIfPresent(Double.self, forKey: .lastPingMS)
         load = try container.decodeIfPresent(Load.self, forKey: .load)
         memory = try container.decodeIfPresent(Memory.self, forKey: .memory)
-        activeJobs = try container.decodeIfPresent(Int.self, forKey: .activeJobs) ?? 0
+        activeJobs = try container.decodeLenientIntIfPresent(forKey: .activeJobs) ?? 0
     }
 
     var dotColor: NodeDotColor {
@@ -110,16 +139,26 @@ struct Node: Decodable, Sendable {
 }
 
 struct Load: Decodable, Sendable {
-    let load1: Double
-    let load5: Double
-    let load15: Double
-    let ncpu: Int
+    let load1: Double?
+    let load5: Double?
+    let load15: Double?
+    let ncpu: Int?
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        load1 = try container.decodeIfPresent(Double.self, forKey: .load1)
+        load5 = try container.decodeIfPresent(Double.self, forKey: .load5)
+        load15 = try container.decodeIfPresent(Double.self, forKey: .load15)
+        ncpu = try container.decodeLenientIntIfPresent(forKey: .ncpu)
+    }
+
+    private enum CodingKeys: String, CodingKey { case load1, load5, load15, ncpu }
 }
 
 struct Memory: Decodable, Sendable {
-    let freePct: Double
+    let freePct: Double?
     let compressedMB: Double?
-    let swapUsedMB: Int
+    let swapUsedMB: Double?
     let source: String
 
     enum CodingKeys: String, CodingKey {
@@ -127,6 +166,14 @@ struct Memory: Decodable, Sendable {
         case compressedMB = "compressed_mb"
         case swapUsedMB = "swap_used_mb"
         case source
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        freePct = try container.decodeIfPresent(Double.self, forKey: .freePct)
+        compressedMB = try container.decodeIfPresent(Double.self, forKey: .compressedMB)
+        swapUsedMB = try container.decodeIfPresent(Double.self, forKey: .swapUsedMB)
+        source = try container.decodeIfPresent(String.self, forKey: .source) ?? ""
     }
 }
 
@@ -184,7 +231,7 @@ struct Tasks: Decodable, Sendable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         byState = try container.decode(TaskCounts.self, forKey: .byState)
-        decisionsPending = try container.decodeIfPresent(Int.self, forKey: .decisionsPending) ?? 0
+        decisionsPending = try container.decodeLenientIntIfPresent(forKey: .decisionsPending) ?? 0
         active = try container.decodeIfPresent([ActiveTask].self, forKey: .active) ?? []
     }
 }
@@ -207,13 +254,13 @@ struct TaskCounts: Decodable, Sendable {
 
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        backlog = try container.decodeIfPresent(Int.self, forKey: .backlog) ?? 0
-        claimed = try container.decodeIfPresent(Int.self, forKey: .claimed) ?? 0
-        inProgress = try container.decodeIfPresent(Int.self, forKey: .inProgress) ?? 0
-        verifying = try container.decodeIfPresent(Int.self, forKey: .verifying) ?? 0
-        join = try container.decodeIfPresent(Int.self, forKey: .join) ?? 0
-        needsDecision = try container.decodeIfPresent(Int.self, forKey: .needsDecision) ?? 0
-        hold = try container.decodeIfPresent(Int.self, forKey: .hold) ?? 0
+        backlog = try container.decodeLenientIntIfPresent(forKey: .backlog) ?? 0
+        claimed = try container.decodeLenientIntIfPresent(forKey: .claimed) ?? 0
+        inProgress = try container.decodeLenientIntIfPresent(forKey: .inProgress) ?? 0
+        verifying = try container.decodeLenientIntIfPresent(forKey: .verifying) ?? 0
+        join = try container.decodeLenientIntIfPresent(forKey: .join) ?? 0
+        needsDecision = try container.decodeLenientIntIfPresent(forKey: .needsDecision) ?? 0
+        hold = try container.decodeLenientIntIfPresent(forKey: .hold) ?? 0
     }
 }
 
@@ -230,6 +277,17 @@ struct ActiveTask: Decodable, Sendable {
         case id, lane, title, kind, state
         case claimedBy = "claimed_by"
         case updatedAt = "updated_at"
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeLenientIntIfPresent(forKey: .id) ?? 0
+        lane = try container.decode(String.self, forKey: .lane)
+        title = try container.decode(String.self, forKey: .title)
+        kind = try container.decode(String.self, forKey: .kind)
+        state = try container.decode(String.self, forKey: .state)
+        claimedBy = try container.decode(String.self, forKey: .claimedBy)
+        updatedAt = try container.decode(String.self, forKey: .updatedAt)
     }
 }
 
