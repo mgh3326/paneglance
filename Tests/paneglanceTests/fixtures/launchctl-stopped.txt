@@ -1,0 +1,9 @@
+gui/501/dev.example.demo = {
+	active count = 0
+	path = /Users/example/Library/LaunchAgents/dev.example.demo.plist
+	type = LaunchAgent
+	state = not running
+	...
+	runs = 0
+	last exit code = (never exited)
+}
