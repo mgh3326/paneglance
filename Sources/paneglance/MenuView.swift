@@ -56,19 +56,22 @@ enum MenuRenderer {
 
     static func machineLine(_ node: Node) -> MachineMenuLine {
         let load: String
-        if let nodeLoad = node.load {
-            load = String(
-                format: "load %.1f/%d",
-                locale: Locale(identifier: "en_US_POSIX"),
-                nodeLoad.load1,
-                nodeLoad.ncpu
-            )
+        if let nodeLoad = node.load, let load1 = nodeLoad.load1 {
+            // A node can report a load average without a cpu count (and vice versa),
+            // so each half falls back to the en dash the menu already uses for
+            // missing data rather than dropping the whole line.
+            let cpus = nodeLoad.ncpu.map(String.init) ?? "–"
+            let average = String(format: "%.1f", locale: Locale(identifier: "en_US_POSIX"), load1)
+            load = "load \(average)/\(cpus)"
         } else {
             load = "load –"
         }
         let memory: String
         if let nodeMemory = node.memory {
-            memory = "free \(Int(nodeMemory.freePct.rounded()))%  swap \(nodeMemory.swapUsedMB)"
+            let free = wholeNumber(nodeMemory.freePct, rule: .toNearestOrAwayFromZero).map { "\($0)%" } ?? "–"
+            // Swap arrives fractional (14446.44 MB); the menu shows whole megabytes.
+            let swap = wholeNumber(nodeMemory.swapUsedMB, rule: .down) ?? "–"
+            memory = "free \(free)  swap \(swap)"
         } else {
             memory = "free –  swap –"
         }
@@ -92,6 +95,17 @@ enum MenuRenderer {
     static func activeTaskLine(_ task: ActiveTask) -> String {
         let title = task.title.count <= 40 ? task.title : String(task.title.prefix(39)) + "…"
         return "#\(task.id) \(task.lane) · \(title)"
+    }
+
+    /// Renders a measured quantity as whole units, or nil when there is nothing
+    /// sensible to show — absent, non-finite, or too large to convert without
+    /// trapping. Callers substitute the menu's en dash.
+    private static func wholeNumber(_ value: Double?, rule: FloatingPointRoundingRule) -> String? {
+        guard
+            let value, value.isFinite,
+            value >= Double(Int.min), value < Double(Int.max)
+        else { return nil }
+        return String(Int(value.rounded(rule)))
     }
 
     private static func formatted(_ date: Date?, format: String, timeZone: TimeZone) -> String? {

@@ -1,0 +1,615 @@
+{
+  "generated_at": "2026-09-06T14:52:22.136096474Z",
+  "hub": {
+    "ok": true,
+    "error": ""
+  },
+  "nodes": [
+    {
+      "accepting": true,
+      "accepting_effective": true,
+      "accepting_override": "on",
+      "active_jobs": 5,
+      "alert_class": "presence-only",
+      "connected_since": "2026-09-06T07:52:21.510448546Z",
+      "last_ping_ms": 497,
+      "load": {
+        "load1": 0.4,
+        "load5": 0.46,
+        "load15": 0.46,
+        "ncpu": 4
+      },
+      "machine_id": "machine-a",
+      "memory": {
+        "free_pct": 91.85417764500767,
+        "compressed_mb": null,
+        "swap_used_mb": 0,
+        "psi_some_avg10": 0,
+        "source": "proc_meminfo"
+      },
+      "remote_meta": {},
+      "state": "connected"
+    },
+    {
+      "accepting": true,
+      "accepting_effective": true,
+      "accepting_override": "on",
+      "active_jobs": 12,
+      "alert_class": "watched",
+      "connected_since": "2026-09-06T08:24:53.20249644Z",
+      "last_ping_ms": 7627,
+      "load": {
+        "load1": 2.49,
+        "load5": 2.54,
+        "load15": 2.53,
+        "ncpu": 16
+      },
+      "machine_id": "machine-b",
+      "memory": {
+        "free_pct": 75,
+        "compressed_mb": 4166.77734375,
+        "swap_used_mb": 0,
+        "psi_some_avg10": null,
+        "source": "memory_pressure"
+      },
+      "remote_meta": {},
+      "state": "connected"
+    },
+    {
+      "accepting": true,
+      "accepting_effective": true,
+      "accepting_override": "on",
+      "active_jobs": 0,
+      "alert_class": "presence-only",
+      "connected_since": "2026-09-06T14:47:48.866799111Z",
+      "last_ping_ms": 2985,
+      "load": {
+        "load1": 6.02,
+        "load5": 8.51,
+        "load15": 11.51,
+        "ncpu": 10
+      },
+      "machine_id": "machine-c",
+      "memory": {
+        "free_pct": 58,
+        "compressed_mb": 10083.84375,
+        "swap_used_mb": 14446.44,
+        "psi_some_avg10": null,
+        "source": "memory_pressure"
+      },
+      "remote_meta": {},
+      "state": "connected"
+    },
+    {
+      "accepting": false,
+      "accepting_effective": false,
+      "accepting_override": "auto",
+      "active_jobs": 0,
+      "alert_class": "presence-only",
+      "connected_since": "2026-09-06T14:09:52.201068981Z",
+      "last_ping_ms": 9910,
+      "load": {
+        "load1": 0.72,
+        "load5": 0.87,
+        "load15": 0.98,
+        "ncpu": 2
+      },
+      "machine_id": "machine-d",
+      "memory": {
+        "free_pct": 46.78523853366758,
+        "compressed_mb": null,
+        "swap_used_mb": 0,
+        "psi_some_avg10": null,
+        "source": "proc_meminfo"
+      },
+      "remote_meta": {},
+      "state": "connected"
+    },
+    {
+      "accepting": false,
+      "accepting_effective": false,
+      "accepting_override": "auto",
+      "active_jobs": 0,
+      "alert_class": "watched",
+      "connected_since": "2026-09-06T07:52:21.695599737Z",
+      "last_ping_ms": 258,
+      "load": {
+        "load1": 0.4,
+        "load5": 0.37,
+        "load15": 0.27,
+        "ncpu": 2
+      },
+      "machine_id": "machine-e",
+      "memory": {
+        "free_pct": 70.6054523688342,
+        "compressed_mb": null,
+        "swap_used_mb": 6.7890625,
+        "psi_some_avg10": null,
+        "source": "proc_meminfo"
+      },
+      "remote_meta": {},
+      "state": "connected"
+    },
+    {
+      "accepting": false,
+      "accepting_effective": false,
+      "accepting_override": "auto",
+      "active_jobs": 0,
+      "alert_class": "watched",
+      "connected_since": "2026-09-06T07:52:21.495043319Z",
+      "last_ping_ms": 9327,
+      "load": {
+        "load1": 0.04,
+        "load5": 0.07,
+        "load15": null,
+        "ncpu": null
+      },
+      "machine_id": "machine-f",
+      "memory": null,
+      "remote_meta": {},
+      "state": "connected"
+    }
+  ],
+  "lanes": [
+    {
+      "lane": "lane-1",
+      "machine": "machine-b",
+      "pane": "w1:p1",
+      "parent": "",
+      "sink": false
+    },
+    {
+      "lane": "lane-2",
+      "machine": "machine-b",
+      "pane": "w1:p2",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-4",
+      "machine": "machine-b",
+      "pane": "w1:p3",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-5",
+      "machine": "machine-b",
+      "pane": "w1:p4",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-6",
+      "machine": "machine-b",
+      "pane": "w1:p5",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-7",
+      "machine": "machine-b",
+      "pane": "w1:p6",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-8",
+      "machine": "machine-b",
+      "pane": "w1:p7",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-9",
+      "machine": "machine-b",
+      "pane": "w1:p8",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-10",
+      "machine": "machine-b",
+      "pane": "w1:p9",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-11",
+      "machine": "machine-b",
+      "pane": "w1:p10",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-12",
+      "machine": "machine-b",
+      "pane": "w1:p11",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-13",
+      "machine": "machine-b",
+      "pane": "w1:p12",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-14",
+      "machine": "machine-a",
+      "pane": "w1:p13",
+      "parent": "lane-15",
+      "sink": false
+    },
+    {
+      "lane": "lane-16",
+      "machine": "machine-b",
+      "pane": "w1:p14",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-17",
+      "machine": "machine-b",
+      "pane": "w1:p15",
+      "parent": "lane-15",
+      "sink": false
+    },
+    {
+      "lane": "lane-18",
+      "machine": "machine-b",
+      "pane": "w1:p16",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-19",
+      "machine": "machine-b",
+      "pane": "w1:p17",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-20",
+      "machine": "machine-b",
+      "pane": "w1:p18",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-21",
+      "machine": "machine-b",
+      "pane": "w1:p19",
+      "parent": "lane-3",
+      "sink": false
+    },
+    {
+      "lane": "lane-15",
+      "machine": "machine-b",
+      "pane": "w1:p20",
+      "parent": "",
+      "sink": false
+    },
+    {
+      "lane": "lane-3",
+      "machine": "machine-b",
+      "pane": "w1:p21",
+      "parent": "lane-1",
+      "sink": false
+    },
+    {
+      "lane": "lane-22",
+      "machine": "machine-g",
+      "pane": "",
+      "parent": "lane-1",
+      "sink": true
+    },
+    {
+      "lane": "lane-23",
+      "machine": "machine-d",
+      "pane": "w1:p23",
+      "parent": "lane-3",
+      "sink": false
+    }
+  ],
+  "jobs": [
+    {
+      "machine": "machine-b",
+      "job_id": "job-1",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-04T20:20:24Z",
+      "last_event_kind": "quota_pool.release",
+      "last_event_at": "2026-09-04T20:22:14Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-2",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-04T20:43:20Z",
+      "last_event_kind": "quota_pool.release",
+      "last_event_at": "2026-09-04T20:45:06Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-3",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-06T08:00:29Z",
+      "last_event_kind": "job.spawned",
+      "last_event_at": "2026-09-06T08:01:26Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-4",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-06T08:13:29Z",
+      "last_event_kind": "job.spawned",
+      "last_event_at": "2026-09-06T08:14:25Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-5",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-06T12:00:28Z",
+      "last_event_kind": "job.spawned",
+      "last_event_at": "2026-09-06T12:01:24Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-6",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-04T12:14:26Z",
+      "last_event_kind": "quota_pool.record",
+      "last_event_at": "2026-09-04T12:14:27Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-7",
+      "owner_lane": "lane-24",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-06T12:13:27Z",
+      "last_event_kind": "job.spawned",
+      "last_event_at": "2026-09-06T12:14:23Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-8",
+      "owner_lane": "lane-18",
+      "tier": "T2",
+      "role": "worker",
+      "started_at": "2026-09-05T09:37:31Z",
+      "last_event_kind": "job.spawned",
+      "last_event_at": "2026-09-05T09:37:54Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-9",
+      "owner_lane": "lane-13",
+      "tier": "T2",
+      "role": "captain",
+      "started_at": "2026-09-06T06:28:39Z",
+      "last_event_kind": "job.lost",
+      "last_event_at": "2026-09-06T12:29:09Z"
+    },
+    {
+      "machine": "machine-a",
+      "job_id": "job-10",
+      "owner_lane": "lane-14",
+      "tier": "T2",
+      "role": "captain",
+      "started_at": "2026-09-04T23:07:32Z",
+      "last_event_kind": "job.joined",
+      "last_event_at": "2026-09-05T04:22:52Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-11",
+      "owner_lane": "lane-18",
+      "tier": "T1",
+      "role": "captain",
+      "started_at": "2026-09-05T04:37:12Z",
+      "last_event_kind": "job.lost",
+      "last_event_at": "2026-09-05T04:38:39Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-12",
+      "owner_lane": "lane-1",
+      "tier": "T0",
+      "role": "worker",
+      "started_at": "2026-09-05T05:14:29Z",
+      "last_event_kind": "job.escalate",
+      "last_event_at": "2026-09-06T00:22:51Z"
+    },
+    {
+      "machine": "machine-a",
+      "job_id": "job-13",
+      "owner_lane": "lane-25",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-05T03:24:03Z",
+      "last_event_kind": "job.claim",
+      "last_event_at": "2026-09-05T03:24:03Z"
+    },
+    {
+      "machine": "machine-a",
+      "job_id": "job-14",
+      "owner_lane": "lane-25",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-05T03:24:03Z",
+      "last_event_kind": "job.claim",
+      "last_event_at": "2026-09-05T03:24:03Z"
+    },
+    {
+      "machine": "machine-b",
+      "job_id": "job-15",
+      "owner_lane": "lane-25",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-05T03:31:27Z",
+      "last_event_kind": "job.claim",
+      "last_event_at": "2026-09-05T03:31:27Z"
+    },
+    {
+      "machine": "machine-a",
+      "job_id": "job-16",
+      "owner_lane": "lane-25",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-05T03:24:10Z",
+      "last_event_kind": "job.claim",
+      "last_event_at": "2026-09-05T03:24:10Z"
+    },
+    {
+      "machine": "machine-a",
+      "job_id": "job-17",
+      "owner_lane": "lane-26",
+      "tier": "T1",
+      "role": "worker",
+      "started_at": "2026-09-05T03:23:42Z",
+      "last_event_kind": "job.claim",
+      "last_event_at": "2026-09-05T03:23:42Z"
+    }
+  ],
+  "tasks": {
+    "by_state": {
+      "backlog": 16,
+      "claimed": 1,
+      "hold": 0,
+      "in_progress": 6,
+      "join": 0,
+      "needs_decision": 0,
+      "verifying": 5
+    },
+    "decisions_pending": 0,
+    "active": [
+      {
+        "id": 58,
+        "lane": "lane-1",
+        "title": "task 1",
+        "kind": "implement",
+        "state": "claimed",
+        "claimed_by": "lane-13",
+        "updated_at": "2026-09-06T15:29:31.273101+09:00"
+      },
+      {
+        "id": 53,
+        "lane": "lane-1",
+        "title": "task 2",
+        "kind": "decide",
+        "state": "verifying",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T09:23:59.441883+09:00"
+      },
+      {
+        "id": 52,
+        "lane": "lane-1",
+        "title": "task 3",
+        "kind": "decide",
+        "state": "in_progress",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T09:17:01.612873+09:00"
+      },
+      {
+        "id": 45,
+        "lane": "lane-1",
+        "title": "task 4",
+        "kind": "decide",
+        "state": "in_progress",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T05:19:33.282584+09:00"
+      },
+      {
+        "id": 41,
+        "lane": "lane-1",
+        "title": "task 5",
+        "kind": "decide",
+        "state": "verifying",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T05:08:12.055387+09:00"
+      },
+      {
+        "id": 42,
+        "lane": "lane-1",
+        "title": "task 6",
+        "kind": "decide",
+        "state": "verifying",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T05:08:11.930853+09:00"
+      },
+      {
+        "id": 43,
+        "lane": "lane-1",
+        "title": "task 7",
+        "kind": "decide",
+        "state": "in_progress",
+        "claimed_by": "",
+        "updated_at": "2026-09-06T05:02:35.524666+09:00"
+      },
+      {
+        "id": 30,
+        "lane": "lane-4",
+        "title": "task 8",
+        "kind": "implement",
+        "state": "in_progress",
+        "claimed_by": "lane-4",
+        "updated_at": "2026-09-05T21:37:18.76741+09:00"
+      },
+      {
+        "id": 31,
+        "lane": "lane-1",
+        "title": "task 9",
+        "kind": "fix",
+        "state": "verifying",
+        "claimed_by": "",
+        "updated_at": "2026-09-05T20:15:58.814865+09:00"
+      },
+      {
+        "id": 26,
+        "lane": "lane-1",
+        "title": "task 10",
+        "kind": "ops",
+        "state": "in_progress",
+        "claimed_by": "",
+        "updated_at": "2026-09-05T19:46:54.121639+09:00"
+      },
+      {
+        "id": 25,
+        "lane": "lane-1",
+        "title": "task 11",
+        "kind": "implement",
+        "state": "verifying",
+        "claimed_by": "",
+        "updated_at": "2026-09-05T19:43:09.359905+09:00"
+      },
+      {
+        "id": 18,
+        "lane": "lane-14",
+        "title": "task 12",
+        "kind": "fix",
+        "state": "in_progress",
+        "claimed_by": "lane-18",
+        "updated_at": "2026-09-05T13:44:40.499145+09:00"
+      }
+    ]
+  },
+  "console_paths": {
+    "decisions": "/ui/decisions",
+    "fleet": "/ui/fleet",
+    "queue": "/ui/queue"
+  }
+}
